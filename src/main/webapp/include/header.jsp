@@ -87,6 +87,9 @@
                     	</c:when>
                     	<c:otherwise>
                     		<li>
+                    			<a href="${pageContext.request.contextPath }/user/modify.user">수정</a> 
+                    		</li>
+                    		<li>
                         		<a href="${pageContext.request.contextPath }/user/logout.user">LOGOUT</a>
                     		</li>
                     		<li>

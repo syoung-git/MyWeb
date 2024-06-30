@@ -142,6 +142,40 @@ public class UserDAO {
 		return dto;
 	}
 	
+	public UserDTO getInfo(String id) {
+
+		UserDTO dto = null;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "SELECT * FROM USERS WHERE ID = ?";
+		try {
+			
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				String pw = rs.getString("pw");
+				String name = rs.getString("name");
+				String email = rs.getString("email");
+				String gender = rs.getString("gender");
+				
+				dto = new UserDTO(id, pw, name, email, gender, null);
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(conn, pstmt, rs);
+		}
+		return dto;
+	}	
+	
 	
 	
 }

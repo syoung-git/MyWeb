@@ -49,10 +49,6 @@ public class UserServiceImpl implements UserService {
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw"); 
 		
-		System.out.println(id+" "+pw);
-		
-		
-		
 		//로그인시도
 		UserDAO dao = UserDAO.getInstance();
 		UserDTO dto = dao.login(id, pw );
@@ -66,7 +62,8 @@ public class UserServiceImpl implements UserService {
 			//세션에 로그인 성공에 대한 내용 저장
 			HttpSession session = request.getSession(); //리퀘스트에서 현재 세션을 얻음
 			session.setAttribute( "user_id", dto.getId() ); 
-			session.setAttribute( "user_name", dto.getName() ); 
+			session.setAttribute( "user_name", dto.getName() );
+			session.setAttribute( "user_email", dto.getEmail() );
 			
 			response.sendRedirect("mypage.user");//다시 컨트롤러를 태워서 나간다.
 			
@@ -86,8 +83,15 @@ public class UserServiceImpl implements UserService {
 		 * 5. 회원정보를 input태그에 미리 출력하면 된다.
 		 */
 		
+		
 		//자바에서 세션 사용하는 법
 		HttpSession session = request.getSession();
+		session.getAttribute("user_id");
+		session.getAttribute("user_name");
+		session.getAttribute("user_email");
+		
+		request.getRequestDispatcher("modify.jsp").forward(request, response);
+	
 	}
 	
 	

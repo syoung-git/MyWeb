@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="../include/header.jsp" %>
 
-<setion>
+<section>
 	
 	<!-- 
 		input태그에 많이 사용되는 주요 속성
@@ -20,24 +20,24 @@
 		<P>정보를 수정하시려면, 수정버튼을 누르세요</P>
 		<hr>
 		<!-- 컨트롤러로 가는거임 -->
-		<form action="####" method="post">
+		<form action="modifyForm.user" method="post">
 			<table>
 				<tr>
 					<td>아이디</td>
-					<td><input type="text" name="id" placeholder="4글자이상" readonly="readonly"></td>
+					<td><input type="text" name="id" placeholder="${user_id }" readonly="readonly"></td>
 					
 				</tr>
 				<tr>
 					<td>비밀번호</td>
-					<td><input type="text" name="pw" placeholder="4글자 이상" required="required" pattern="[0-9A-Za-z]{4,}"></td>
+					<td><input type="text" name="pw" placeholder="비밀번호" required="required" pattern="[0-9A-Za-z]{4,}"></td>
 				</tr>
 				<tr>
 					<td>이름</td>
-					<td><input type="text" name="name" placeholder="이름" required="required"></td>
+					<td><input type="text" name="name" placeholder="${user_name }" required="required"></td>
 				</tr>
 				<tr>
 					<td>이메일</td>
-					<td><input type="email" name="email"></td>
+					<td><input type="email" name="email" placeholder="${user_email }" required="required"></td>
 				</tr>
 				<tr>
 					<td>남? 여?</td>
@@ -57,7 +57,7 @@
 		
 	</div>
 	
-</setion>
+</section>
 
 <%@ include file="../include/footer.jsp" %>
 
