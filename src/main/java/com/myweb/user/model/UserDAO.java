@@ -142,9 +142,10 @@ public class UserDAO {
 		return dto;
 	}
 	
+	//회원정보 조회 메서드
 	public UserDTO getInfo(String id) {
 
-		UserDTO dto = null;
+		UserDTO dto = new UserDTO();
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -153,18 +154,23 @@ public class UserDAO {
 		String sql = "SELECT * FROM USERS WHERE ID = ?";
 		try {
 			
-			conn = ds.getConnection();
-			pstmt = conn.prepareStatement(sql);
+			conn = ds.getConnection(); //DB연결하기 위한 객체
+			pstmt = conn.prepareStatement(sql); //sql실행하기 위한 객체
 			pstmt.setString(1,id);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
+				//ORM(Object Relatioin Mapping)
 				String pw = rs.getString("pw");
 				String name = rs.getString("name");
 				String email = rs.getString("email");
 				String gender = rs.getString("gender");
 				
-				dto = new UserDTO(id, pw, name, email, gender, null);
+				//setter - dto 안에 값이 저장됨
+				dto.setId(id);
+				dto.setName(name);
+				dto.setEmail(email);
+				dto.setGender(gender);
 			}
 			
 			
@@ -176,6 +182,58 @@ public class UserDAO {
 		return dto;
 	}	
 	
+	//회원정보 수정 메서드 - 성공시 1반환, 실패시 0반환
+	public int update(UserDTO dto) {
+		
+		int result = 0; //실패하면 0
+		
+		String sql = "UPDATE USERS SET PW=?, NAME=?, EMAIL=?, GENDER=? WHERE ID = ?";
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			
+			conn=ds.getConnection();
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getPw());
+			pstmt.setString(2, dto.getName());
+			pstmt.setString(3, dto.getEmail());
+			pstmt.setString(4, dto.getGender());
+			pstmt.setString(5, dto.getId());
+			
+			//반환 결과를 받고 싶으면, 0이면 실패 1이면 성공
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(conn, pstmt, null);
+		}
+		
+		return result;
+	}
 	
+	public void delete(String id, String pw) {
+		
+		String sql = "DELETE FROM USERS WHERE PW = ?";
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, pw);
+			
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtil.close(conn, pstmt, null);
+		}
+	}
 	
 }

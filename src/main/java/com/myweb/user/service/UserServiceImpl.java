@@ -86,13 +86,99 @@ public class UserServiceImpl implements UserService {
 		
 		//자바에서 세션 사용하는 법
 		HttpSession session = request.getSession();
-		session.getAttribute("user_id");
-		session.getAttribute("user_name");
-		session.getAttribute("user_email");
+		String id = (String)session.getAttribute("user_id");
 		
+		//DAO객체 생성
+		UserDAO dao = UserDAO.getInstance();
+		UserDTO dto = dao.getInfo(id);
+		
+		//dto를 클라이언트로 가지고 감
+		request.setAttribute("dto", dto); //이름, 값
 		request.getRequestDispatcher("modify.jsp").forward(request, response);
 	
 	}
+
+	@Override
+	public void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		//클라이언트의 값을 받음
+		String id = request.getParameter("id");
+		String pw = request.getParameter("pw");
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String gender = request.getParameter("gender");
+		
+		//parameter를 dto에 저장
+		UserDTO dto = new UserDTO(id, pw, name, email, gender, null);
+		
+		//DAO 생성
+		UserDAO dao = UserDAO.getInstance();
+		//업데이트
+		int result = dao.update(dto);
+		
+		if(result==1) {//update성공
+			//세션 name을 수정
+			HttpSession session = request.getSession();
+			session.setAttribute("user_name", name);
+			
+			//java에서 알림창을 화면에 보내는 방법
+			//out객체 - 클라이언트로 출력
+			response.setContentType("text/html; charset=UTF-8");//문서에 대한 타입을 보냄
+			PrintWriter out = response.getWriter();
+			out.println("<script>");
+			out.println("alert('회원정보가 수정되었습니다.')");
+			out.println("location.href='mypage.user';");
+			out.println("</script>");
+			
+		}else {//update 실패
+			//유저페이지로 보냄
+			response.sendRedirect("mypage.user");//mvc2에서는 리다이렉트가 컨트롤러의 경로가 된다.
+		}
+		
+	}
+
+	@Override
+	public void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		/*
+		 * 1. 화면에서 넘어오는 pw값을 받으세요.
+		 * 2. 회원탈퇴는 비밀번호가 일치하는지 확인하고, 탈퇴를 진행한다.
+		 *    >> login메서드는 id, pw를 받아서 비밀번호 일치하는지 확인 가능(재활용)
+		 * 3. login메서드가 DTO를 반환하면 DAO에 delete메서드를 만들고, 회원삭제를 진행한다.
+		 * 4. 탈퇴 성공 시에는 세션을 전부 삭제하고 "홈화면"으로 리다이렉트
+		 * 	  비밀번호가 틀린 경우(login메서드가 null을 반환)에는 delete.jsp에 "비밀번호를 확인하세요" 메시지를 남긴다.
+		 */
+		
+		HttpSession session = request.getSession();
+		String id = (String)session.getAttribute("user_id");
+		String pw = request.getParameter("pw");
+		
+		UserDAO dao = UserDAO.getInstance();
+		UserDTO dto = dao.login(id, pw );
+		
+		if(dto==null) {
+			request.setAttribute("msg", "비밀번호를 다시 입력하세요.");
+			request.getRequestDispatcher("delete.jsp").forward(request,response);
+			/* response.sendRedirect("delete.jsp"); */
+			//데이터 보낼거 없으면 리다이렉트
+			//보낼거 있으면 forward
+			
+		}else {
+			dao.delete(id, pw);
+			
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>");
+			out.println("alert('탈퇴 성공')");
+			out.println("location.href='/MyWeb/index.jsp';");
+			out.println("</script>");
+			
+			session.invalidate();
+			
+		}
+	}
+	
 	
 	
 }

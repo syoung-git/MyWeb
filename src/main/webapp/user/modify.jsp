@@ -20,11 +20,11 @@
 		<P>정보를 수정하시려면, 수정버튼을 누르세요</P>
 		<hr>
 		<!-- 컨트롤러로 가는거임 -->
-		<form action="modifyForm.user" method="post">
+		<form action="update.user" method="post">
 			<table>
 				<tr>
 					<td>아이디</td>
-					<td><input type="text" name="id" placeholder="${user_id }" readonly="readonly"></td>
+					<td><input type="text" name="id" placeholder="4글자 이상" value="${dto.id }" readonly="readonly"></td>
 					
 				</tr>
 				<tr>
@@ -33,16 +33,16 @@
 				</tr>
 				<tr>
 					<td>이름</td>
-					<td><input type="text" name="name" placeholder="${user_name }" required="required"></td>
+					<td><input type="text" name="name" placeholder="${dto.name }" value="${dto.name }" required="required"></td>
 				</tr>
 				<tr>
 					<td>이메일</td>
-					<td><input type="email" name="email" placeholder="${user_email }" required="required"></td>
+					<td><input type="email" name="email" placeholder="${dto.email }" value="${dto.email }" required="required"></td>
 				</tr>
 				<tr>
 					<td>남? 여?</td>
-					<td><input type="radio" name="gender" value="M" checked="checked">남자
-						<input type="radio" name="gender" value="F">여자
+					<td><input type="radio" name="gender" value="M" ${dto.gender == 'M' ? 'checked' : '' }>남자
+						<input type="radio" name="gender" value="F" ${dto.gender == 'F' ? 'checked' : '' }>여자
 					</td>
 				</tr>
 			</table>

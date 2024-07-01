@@ -71,7 +71,7 @@
                         <a href="${pageContext.request.contextPath }/member/member.jsp">Member</a>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath }/user/login.user">BOARD</a>
+                        <a href="${pageContext.request.contextPath }/board/list.board">BOARD</a>
                     </li>
                     
                     
@@ -86,9 +86,6 @@
                     		</li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li>
-                    			<a href="${pageContext.request.contextPath }/user/modify.user">수정</a> 
-                    		</li>
                     		<li>
                         		<a href="${pageContext.request.contextPath }/user/logout.user">LOGOUT</a>
                     		</li>

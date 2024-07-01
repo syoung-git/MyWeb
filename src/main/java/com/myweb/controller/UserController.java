@@ -31,6 +31,8 @@ public class UserController extends HttpServlet {
 		doAction(request, response);
 	}
 	
+	
+	
 	protected void doAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 		//요청을 분기
@@ -73,6 +75,19 @@ public class UserController extends HttpServlet {
 			session.invalidate();
 			
 			response.sendRedirect(request.getContextPath() + "/index.jsp");
+			
+		} else if(command.equals("/user/update.user")) {//회원정보 수정
+			service = new UserServiceImpl();
+			service.update(request, response);
+			
+		}else if(command.equals("/user/delete.user")) {//삭제화면
+			//mvc2는 기본 이동이 forward
+			request.getRequestDispatcher("delete.jsp").forward(request, response);
+			
+		}else if (command.equals("/user/deleteForm.user")) {//탈퇴요청
+			service = new UserServiceImpl();
+			service.delete(request, response);
+			
 		}
 		
 	}

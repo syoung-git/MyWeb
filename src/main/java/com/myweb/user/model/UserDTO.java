@@ -21,6 +21,10 @@ public class UserDTO {
 		this.regdate = regdate;
 	}
 
+	public UserDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
 	//getter, setter
 	public String getId() {
 		return id;
