@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("*.board")//.board로 끝나는 모든 요청은 서블릿으로 연결
 public class BoardController extends HttpServlet{
@@ -50,12 +51,36 @@ public class BoardController extends HttpServlet{
 			
 			
 		}else if(command.equals("/board/write.board")) {//글 작성화면
+			//로그인해야 글작성 가능하게 한다.
+			HttpSession session = request.getSession();
+			String user_id = (String)session.getAttribute("user_id");
+			
+			if(user_id == null) {
+				response.sendRedirect("/MyWeb/index.jsp");
+				return;
+			}
+			
 			request.getRequestDispatcher("board_write.jsp").forward(request, response);
-			
 		}else if(command.equals("/board/registForm.board")) { //글 등록
-			
 			service = new BoardServiceImpl();
 			service.regist(request, response);
+			
+		} else if(command.equals("/board/getContent.board")) {//글 상세 내용
+			service = new BoardServiceImpl();
+			service.getContent(request, response);
+			
+		}else if(command.equals("/board/modify.board")) {//수정화면으로
+			service = new BoardServiceImpl();
+			service.modify(request, response);
+		
+		}else if(command.equals("/board/updateForm.board")) {//글 수정
+			service = new BoardServiceImpl();
+			service.update(request, response);
+			
+		}else if(command.equals("/board/delete.board")) {//삭제처리
+			service = new BoardServiceImpl();
+			service.delete(request, response);
+			
 		}
 		
 	}

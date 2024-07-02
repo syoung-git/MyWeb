@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <!-- - 모든 내용은 mapper폴더 안으로 들어간다.
+ 	  - namespace에는 구현인터페이스의 풀경로가 들어간다.
+ 	  - id속성은 인터페이스의 함수명이 들어간다.
+ 	  - resultType에는 반환받을 타입이 들어간다.(string, int, double, dto풀경로)
+ 	  - ; 안찍음
+ 	 
+ 	  - 마이바티스의 매개변수는 일단 꼭 1개여야만 한다.
+ 	  - parameterType에는 매개변수의 타입이 들어간다.(string, int, double, dto풀경로)
+ 	   >단, parameterType은 생략 가능
+ 	 
+ 	  - ?값은 #{DTO의 getter명}으로 바뀐다. (대소문자 구분)
+ 	  - ?가 단일 값인 경우는 매개변수명을 따라간다. 
+  -->
+ <mapper namespace="com.myweb.board.model.BoardMapper">
+ 	
+ 	<select id="now" resultType="string">
+ 		SELECT SYSDATE FROM DUAL
+ 	</select>
+ 	
+ 	<select id="getList" resultType="com.myweb.board.model.BoardDTO">
+ 		<!-- 다중 행이어도 하나만 담을 수 있는 BoardDTO 타입만 있으면 됨. 알아서 해줌 -->
+ 		SELECT * FROM BOARD ORDER BY BNO DESC
+ 	</select>
+ 	
+ 	<insert id="regist" parameterType="com.myweb.board.model.BoardDTO">
+ 		INSERT INTO BOARD(BNO, WRITER, TITLE, CONTENT)
+ 		VALUES( BOARD_SEQ.NEXTVAL, #{writer}, #{title}, #{content} )
+ 	</insert>
+ 	
+ 	<select id="getContent" resultType="com.myweb.board.model.BoardDTO">
+ 		SELECT * FROM BOARD WHERE BNO = #{bno}
+ 	</select>
+ 	
+ 	<update id="update" parameterType="com.myweb.board.model.BoardDTO">
+ 		UPDATE BOARD 
+ 		SET TITLE = #{title}, CONTENT = #{content}
+ 		WHERE BNO = #{bno}
+ 	</update>
+ 	
+ 	<delete id="delete" parameterType="com.myweb.board.model.BoardDTO">
+ 		DELETE 
+ 		FROM BOARD 
+ 		WHERE BNO = #{bno}
+ 	</delete>
+ 	
+ 	<update id="increaseHit" parameterType="string">
+ 		UPDATE BOARD 
+ 		SET HIT = HIT +1 
+ 		WHERE BNO = #{bno}
+ 	</update>
+ </mapper>
